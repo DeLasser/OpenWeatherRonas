@@ -9,6 +9,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.Looper
 import android.support.v4.content.PermissionChecker
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -21,7 +22,7 @@ class WeatherRepository(val context: Context) {
     private val api = WeatherApiClient.create()
     private val locationManager = context.getSystemService(AppCompatActivity.LOCATION_SERVICE) as LocationManager
 
-    fun getWeather(city: String) = api.getWeatherByName(city).observeOn(Schedulers.io())
+    fun getWeather(city: String) = api.getWeatherByName(city).subscribeOn(Schedulers.io())
 
     @SuppressLint("MissingPermission")
     fun getWeather(): Observable<Weather> {
@@ -48,11 +49,10 @@ class WeatherRepository(val context: Context) {
                             it.onComplete()
                         }
 
-                    })
+                    }, Looper.getMainLooper())
         }.flatMap {
-            return@flatMap api.getWeatherByCoordinates(it.latitude, it.longitude)
+            return@flatMap api.getWeatherByCoordinates(it.latitude, it.longitude).subscribeOn(Schedulers.io())
         }
-                .observeOn(Schedulers.io())
 
 
     }
