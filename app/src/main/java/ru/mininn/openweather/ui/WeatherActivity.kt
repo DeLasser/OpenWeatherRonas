@@ -8,7 +8,9 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import kotlinx.android.synthetic.main.activity_main.*
 import ru.mininn.openweather.R
+import ru.mininn.openweather.data.model.Weather
 
 class WeatherActivity : AppCompatActivity() {
     private val LOCATION_PERMISSION_CODE = 1001
@@ -58,7 +60,7 @@ class WeatherActivity : AppCompatActivity() {
     private fun subscribeForWeather() {
         viewModel.weatherLiveData.observe(this, Observer {
             if (it != null) {
-                Log.d("asdasd", it.city)
+                bindView(it)
             }
         })
     }
@@ -70,10 +72,13 @@ class WeatherActivity : AppCompatActivity() {
     }
 
     private fun requestPermissions() {
-        Log.d("asd","requestPermissions")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             this.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                     LOCATION_PERMISSION_CODE)
         }
+    }
+
+    private fun bindView(weather: Weather) {
+        this.city.text = weather.city
     }
 }

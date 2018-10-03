@@ -1,17 +1,16 @@
 package ru.mininn.openweather.data.model
 
-import com.google.gson.annotations.SerializedName
-
 class Weather(
-        @SerializedName("name")
-        var city: String
-//        var type: String,
-//        var description: String,
-//        var icon: String,
-//        var temp: Int,
-//        var pressure: Int,
-//        var humidity: Int,
-//        var rain: Int,
-//        var windSpeed: Double,
-//        var windDeg: Int
-)
+        var city: String,
+        var main: String,
+        var description: String,
+        var icon: String,
+        var temp: Double,
+        var pressure: Int,
+        var humidity: Int,
+        var rain: Int,
+        var windSpeed: Double,
+        var windDeg: Int
+) {
+    constructor() : this("","","","",0.0,0,0,0,0.0,0)
+}

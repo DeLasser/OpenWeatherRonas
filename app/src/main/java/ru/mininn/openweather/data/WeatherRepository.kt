@@ -27,7 +27,9 @@ class WeatherRepository(val context: Context) {
     @SuppressLint("MissingPermission")
     fun getWeather(): Observable<Weather> {
         return Observable.create<Location> {
-            locationManager.requestLocationUpdates(getBestProvider(locationManager), 0, 0.0f,
+            Log.d("asd", getBestProvider(locationManager))
+            var criteria = Criteria()
+            locationManager.requestLocationUpdates(0, 0.0f, criteria,
                     object : LocationListener {
                         override fun onLocationChanged(location: Location?) {
                             if (location != null && (location.latitude != 0.0 || location.longitude != 0.0)) {
@@ -35,14 +37,13 @@ class WeatherRepository(val context: Context) {
                                 locationManager.removeUpdates(this)
                                 it.onComplete()
                             }
+
                         }
 
                         override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
-                            it.onComplete()
                         }
 
                         override fun onProviderEnabled(p0: String?) {
-                            it.onComplete()
                         }
 
                         override fun onProviderDisabled(p0: String?) {

@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.PermissionChecker
+import android.util.Log
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import ru.mininn.openweather.data.WeatherRepository
@@ -30,8 +31,10 @@ class WeatherViewModel(application: Application): AndroidViewModel(application) 
         weatherRepository.getWeather(city)
 
                 .subscribe({
+
                     weatherLiveData.postValue(it)
                 },{
+
                     it.printStackTrace()
                 })
     }
@@ -39,13 +42,17 @@ class WeatherViewModel(application: Application): AndroidViewModel(application) 
     fun weatherByLocation() {
         if(!checkPermission()) {
             isPermissionsGranted.postValue(false)
+
+        } else {
+            weatherRepository.getWeather()
+                    .subscribe({
+                        Log.d("asd", it.city)
+                        weatherLiveData.postValue(it)
+                    }, {
+                        Log.d("asd", "error")
+                        it.printStackTrace()
+                    })
         }
-        weatherRepository.getWeather()
-                .subscribe({
-                    weatherLiveData.postValue(it)
-                },{
-                    it.printStackTrace()
-                })
     }
 
     fun changeMetricType() {
